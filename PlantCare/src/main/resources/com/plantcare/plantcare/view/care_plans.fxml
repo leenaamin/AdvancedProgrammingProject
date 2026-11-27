@@ -1,78 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.plantcare.plantcare.controller.CarePlanController"
-            prefWidth="900" prefHeight="520" style="-fx-background-color: #f1f8f1;">
+            stylesheets="@style.css" styleClass="page">
 
-   <!-- Top: title, search, light filter and sort -->
-   <top>
-      <VBox spacing="10">
-         <padding>
-            <Insets top="15" right="15" bottom="10" left="15"/>
-         </padding>
-         <Label text="Care Plans"
-                style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
-         <HBox spacing="10" alignment="CENTER_LEFT">
-            <Label text="Search:"/>
-            <TextField fx:id="searchField" promptText="Plant name..." prefWidth="200"/>
-            <Label text="Light:"/>
-            <ComboBox fx:id="lightFilter" prefWidth="100"/>
-            <Label text="Sort by:"/>
-            <ComboBox fx:id="sortBox" prefWidth="150"/>
-         </HBox>
-      </VBox>
-   </top>
+    <left>
+        <fx:include source="sidebar.fxml" />
+    </left>
 
-   <!-- Center: the table -->
-   <center>
-      <TableView fx:id="table">
-         <BorderPane.margin>
-            <Insets left="15" bottom="15"/>
-         </BorderPane.margin>
-         <columns>
-            <TableColumn fx:id="nameCol" text="Plant" prefWidth="170"/>
-            <TableColumn fx:id="wateringCol" text="Watering" prefWidth="120"/>
-            <TableColumn fx:id="fertilizerCol" text="Fertilizer" prefWidth="100"/>
-            <TableColumn fx:id="lightCol" text="Light" prefWidth="100"/>
-         </columns>
-      </TableView>
-   </center>
+    <center>
+        <HBox spacing="18.0">
+            <padding>
+                <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
+            </padding>
 
-   <!-- Right: the form -->
-   <right>
-      <VBox spacing="8" prefWidth="260" style="-fx-background-color: white;">
-         <BorderPane.margin>
-            <Insets right="15" bottom="15" left="10"/>
-         </BorderPane.margin>
-         <padding>
-            <Insets top="15" right="15" bottom="15" left="15"/>
-         </padding>
+            <!-- Search, filter, sort and the table -->
+            <VBox spacing="14.0" HBox.hgrow="ALWAYS">
+                <Label text="Care Plans"
+                       style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #304b34;" />
+                <Label text="Set the watering, fertilizer and light needs of each plant."
+                       style="-fx-text-fill: #687568;" />
 
-         <Label text="Plan details" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <HBox spacing="8.0">
+                    <TextField fx:id="searchField" promptText="Search by plant name" HBox.hgrow="ALWAYS" />
+                    <ComboBox fx:id="lightFilter" prefWidth="100.0" />
+                    <ComboBox fx:id="sortBox" prefWidth="140.0" />
+                </HBox>
 
-         <Label text="Plant name"/>
-         <TextField fx:id="plantNameField" promptText="e.g. Aloe Vera"/>
+                <TableView fx:id="table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="nameCol" text="Plant" prefWidth="150.0" />
+                        <TableColumn fx:id="wateringCol" text="Watering" prefWidth="110.0" />
+                        <TableColumn fx:id="fertilizerCol" text="Fertilizer" prefWidth="80.0" />
+                        <TableColumn fx:id="lightCol" text="Light" prefWidth="80.0" />
+                    </columns>
+                </TableView>
+            </VBox>
 
-         <Label text="Water every (days)"/>
-         <TextField fx:id="wateringDaysField" promptText="e.g. 3"/>
+            <!-- The form -->
+            <VBox spacing="12.0" prefWidth="235.0"
+                  style="-fx-background-color: white; -fx-background-radius: 10px;">
+                <padding>
+                    <Insets top="18.0" right="16.0" bottom="18.0" left="16.0" />
+                </padding>
 
-         <CheckBox fx:id="fertilizerCheck" text="Needs fertilizer"/>
+                <Label text="Add / Edit Care Plan"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #304b34;" />
+                <Label text="Choose a plant and set its needs."
+                       style="-fx-text-fill: #687568;" />
 
-         <Label text="Light level"/>
-         <ComboBox fx:id="lightBox" prefWidth="230" promptText="Choose..."/>
+                <ComboBox fx:id="plantBox" promptText="Choose a plant" maxWidth="Infinity" />
+                <TextField fx:id="wateringDaysField" promptText="Water every (days)" />
+                <CheckBox fx:id="fertilizerCheck" text="Needs fertilizer" />
+                <ComboBox fx:id="lightBox" promptText="Light level" maxWidth="Infinity" />
 
-         <HBox spacing="6">
-            <Button text="Add" onAction="#onAdd"
-                    style="-fx-background-color: #43a047; -fx-text-fill: white;"/>
-            <Button fx:id="updateButton" text="Update" onAction="#onUpdate"/>
-            <Button fx:id="deleteButton" text="Delete" onAction="#onDelete"
-                    style="-fx-background-color: #e57373; -fx-text-fill: white;"/>
-            <Button text="Clear" onAction="#onClear"/>
-         </HBox>
-      </VBox>
-   </right>
+                <Button text="Add Care Plan"
+                        onAction="#onAdd"
+                        maxWidth="Infinity"
+                        style="-fx-background-color: #527b4f; -fx-text-fill: white;" />
+                <Button fx:id="updateButton" text="Update Selected"
+                        onAction="#onUpdate"
+                        maxWidth="Infinity" />
+                <Button fx:id="deleteButton" text="Delete Selected"
+                        onAction="#onDelete"
+                        maxWidth="Infinity"
+                        style="-fx-background-color: #f2e6e2; -fx-text-fill: #8b4236;" />
+                <Button text="Clear"
+                        onAction="#onClear"
+                        maxWidth="Infinity" />
+            </VBox>
+        </HBox>
+    </center>
 </BorderPane>

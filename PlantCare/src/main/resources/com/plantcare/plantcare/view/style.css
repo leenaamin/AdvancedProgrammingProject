@@ -1,0 +1,5 @@
+.page {
+    -fx-background-image: url("plants-bg.png");
+    -fx-background-size: 300px auto;
+    -fx-background-repeat: repeat;
+}

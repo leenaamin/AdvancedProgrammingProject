@@ -1,4 +1,4 @@
-package com.plantcare.plantcare;
+package com.plantcare.plantcare.model;
 
 public class Plant {
     private String name;
@@ -33,5 +33,11 @@ public class Plant {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    // Added: lets a ComboBox show the plant by its name
+    @Override
+    public String toString() {
+        return name;
     }
 }

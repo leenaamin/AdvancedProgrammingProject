@@ -1,7 +1,8 @@
 package com.plantcare.plantcare.controller;
 
 import com.plantcare.plantcare.model.CarePlan;
-import com.plantcare.plantcare.service.CarePlanStorage;
+import com.plantcare.plantcare.model.Plant;
+import com.plantcare.plantcare.service.DataStore;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -13,7 +14,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,18 +22,20 @@ import java.util.stream.Collectors;
 public class CarePlanController {
 
     // Controls from care_plans.fxml (the names match the fx:id values)
-    @FXML private TextField searchField, plantNameField, wateringDaysField;
+    @FXML private TextField searchField, wateringDaysField;
+    @FXML private ComboBox<Plant> plantBox;
     @FXML private ComboBox<String> lightFilter, sortBox, lightBox;
     @FXML private CheckBox fertilizerCheck;
     @FXML private Button updateButton, deleteButton;
     @FXML private TableView<CarePlan> table;
     @FXML private TableColumn<CarePlan, String> nameCol, wateringCol, fertilizerCol, lightCol;
 
-    // All the care plans, loaded from the file when the window opens
-    private final List<CarePlan> plans = new ArrayList<>(CarePlanStorage.load());
+    // The care plans are kept in the shared DataStore
+    private final List<CarePlan> plans = DataStore.carePlans;
 
     @FXML
     private void initialize() {
+        plantBox.getItems().setAll(DataStore.plants);   // the plants added in Plant Management
         lightFilter.getItems().setAll("All", "Low", "Medium", "High");
         lightFilter.setValue("All");
         sortBox.getItems().setAll("Plant name", "Watering days");
@@ -58,7 +60,7 @@ public class CarePlanController {
         // Selecting a row puts its data in the form
         table.getSelectionModel().selectedItemProperty().addListener((obs, oldPlan, plan) -> {
             if (plan != null) {
-                plantNameField.setText(plan.getPlantName());
+                plantBox.setValue(plan.getPlant());
                 wateringDaysField.setText(String.valueOf(plan.getWateringDays()));
                 fertilizerCheck.setSelected(plan.isNeedsFertilizer());
                 lightBox.setValue(plan.getLightLevel());
@@ -77,8 +79,9 @@ public class CarePlanController {
             showError(error);
             return;
         }
-        plans.add(readForm());
-        saveAndRefresh();
+        plans.add(new CarePlan(plantBox.getValue(), Integer.parseInt(wateringDaysField.getText().trim()),
+                fertilizerCheck.isSelected(), lightBox.getValue()));
+        afterChange();
     }
 
     @FXML
@@ -89,19 +92,23 @@ public class CarePlanController {
             showError(error);
             return;
         }
-        plans.set(plans.indexOf(selected), readForm());
-        saveAndRefresh();
+        // The plan is changed in place, so the watering record linked to it sees the new values
+        selected.setPlant(plantBox.getValue());
+        selected.setWateringDays(Integer.parseInt(wateringDaysField.getText().trim()));
+        selected.setNeedsFertilizer(fertilizerCheck.isSelected());
+        selected.setLightLevel(lightBox.getValue());
+        afterChange();
     }
 
     @FXML
     private void onDelete() {
-        plans.remove(table.getSelectionModel().getSelectedItem());
-        saveAndRefresh();
+        DataStore.deleteCarePlan(table.getSelectionModel().getSelectedItem());
+        afterChange();
     }
 
     @FXML
     private void onClear() {
-        plantNameField.clear();
+        plantBox.setValue(null);
         wateringDaysField.clear();
         fertilizerCheck.setSelected(false);
         lightBox.setValue(null);
@@ -121,9 +128,9 @@ public class CarePlanController {
         }
 
         List<CarePlan> result = plans.stream()
-                .filter(p -> p.getPlantName().toLowerCase().contains(search))    // search by name
+                .filter(p -> p.getPlantName().toLowerCase().contains(search))         // search by plant name
                 .filter(p -> light.equals("All") || p.getLightLevel().equals(light))  // filter by light
-                .sorted(order)                                                    // sort
+                .sorted(order)                                                        // sort
                 .collect(Collectors.toList());
 
         table.setItems(FXCollections.observableArrayList(result));
@@ -136,14 +143,11 @@ public class CarePlanController {
      * "editing" is the plan being updated (null when adding), so it is not counted as a duplicate of itself.
      */
     private String validate(CarePlan editing) {
-        String name = plantNameField.getText().trim();
-        if (name.isEmpty()) {
-            return "Plant name is required.";
+        Plant plant = plantBox.getValue();
+        if (plant == null) {
+            return "Please choose a plant (add it in My Plants first).";
         }
-        if (name.contains(";")) {
-            return "Plant name cannot contain ';'.";
-        }
-        if (plans.stream().anyMatch(p -> p != editing && p.getPlantName().equalsIgnoreCase(name))) {
+        if (plans.stream().anyMatch(p -> p != editing && p.getPlant() == plant)) {
             return "This plant already has a care plan.";
         }
         try {
@@ -162,14 +166,7 @@ public class CarePlanController {
 
     // ===== Helpers =====
 
-    private CarePlan readForm() {
-        return new CarePlan(plantNameField.getText().trim(),
-                Integer.parseInt(wateringDaysField.getText().trim()),
-                fertilizerCheck.isSelected(), lightBox.getValue());
-    }
-
-    private void saveAndRefresh() {
-        CarePlanStorage.save(plans);
+    private void afterChange() {
         refresh();
         onClear();
     }

@@ -12,27 +12,16 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.plantcare.plantcare.PrimaryController"
-            style="-fx-background-color: #f4f5ee;">
+            fx:controller="com.plantcare.plantcare.controller.PlantController"
+            stylesheets="@style.css" styleClass="page">
 
+    <!-- Changed: the side menu is now shared by all the windows -->
     <left>
-        <VBox spacing="18.0" prefWidth="175.0"
-              style="-fx-background-color: #355b3b;">
-            <padding>
-                <Insets top="24.0" right="14.0" bottom="20.0" left="14.0" />
-            </padding>
-
-            <Label text="🌿 PlantCare"
-                   style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" />
-            <Label text="PLANT MANAGEMENT"
-                   style="-fx-text-fill: #dce8d7; -fx-font-size: 10px;" />
-            <Label text="🌱  My Plants"
-                   style="-fx-text-fill: white; -fx-font-size: 14px; -fx-background-color: #56775b; -fx-padding: 10px;" />
-        </VBox>
+        <fx:include source="sidebar.fxml" />
     </left>
 
     <center>
-        <HBox spacing="18.0" style="-fx-background-color: #f4f5ee;">
+        <HBox spacing="18.0">
             <padding>
                 <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
             </padding>

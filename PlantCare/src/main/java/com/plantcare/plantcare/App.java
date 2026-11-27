@@ -17,12 +17,14 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-      scene = new Scene(loadFXML("primary"), 1100, 650);
+        scene = new Scene(loadFXML("view/plant_management"), 1000, 600);
+        stage.setTitle("PlantCare");
         stage.setScene(scene);
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
+    // public: the side menu (SidebarController) uses it to open the other windows
+    public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
 

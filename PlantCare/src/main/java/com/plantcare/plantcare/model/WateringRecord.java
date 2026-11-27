@@ -3,7 +3,10 @@ package com.plantcare.plantcare.model;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-/** Model: the watering schedule of one plant (a simple class with no JavaFX code). */
+/**
+ * Model: the watering record of one plant.
+ * It is linked to the plant's CarePlan, so the watering interval always comes from the care plan.
+ */
 public class WateringRecord {
 
     // Watering status of a plant
@@ -14,24 +17,24 @@ public class WateringRecord {
 
     private static final int SOON_DAYS = 2;
 
-    private final String plantName;
-    private final int wateringDays;     // water every N days
+    private final CarePlan carePlan;
     private LocalDate lastWatered;
 
-    public WateringRecord(String plantName, int wateringDays, LocalDate lastWatered) {
-        this.plantName = plantName;
-        this.wateringDays = wateringDays;
+    public WateringRecord(CarePlan carePlan, LocalDate lastWatered) {
+        this.carePlan = carePlan;
         this.lastWatered = lastWatered;
     }
 
-    public String getPlantName() { return plantName; }
-    public int getWateringDays() { return wateringDays; }
+    public CarePlan getCarePlan() { return carePlan; }
     public LocalDate getLastWatered() { return lastWatered; }
     public void setLastWatered(LocalDate lastWatered) { this.lastWatered = lastWatered; }
 
+    public String getPlantName() { return carePlan.getPlantName(); }
+    public int getWateringDays() { return carePlan.getWateringDays(); }
+
     /** Next watering date = last watering date + watering interval (in days). */
     public LocalDate getNextWateringDate() {
-        return lastWatered.plusDays(wateringDays);
+        return lastWatered.plusDays(getWateringDays());
     }
 
     /** Compares the next watering date with today. */

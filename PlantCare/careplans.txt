@@ -1,0 +1,2 @@
+rose;4;true;Low
+palm;10;false;Medium

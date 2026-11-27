@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.plantcare.plantcare.controller.CarePlanController"
+            prefWidth="900" prefHeight="520" style="-fx-background-color: #f1f8f1;">
+
+   <!-- Top: title, search, light filter and sort -->
+   <top>
+      <VBox spacing="10">
+         <padding>
+            <Insets top="15" right="15" bottom="10" left="15"/>
+         </padding>
+         <Label text="Care Plans"
+                style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+         <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Search:"/>
+            <TextField fx:id="searchField" promptText="Plant name..." prefWidth="200"/>
+            <Label text="Light:"/>
+            <ComboBox fx:id="lightFilter" prefWidth="100"/>
+            <Label text="Sort by:"/>
+            <ComboBox fx:id="sortBox" prefWidth="150"/>
+         </HBox>
+      </VBox>
+   </top>
+
+   <!-- Center: the table -->
+   <center>
+      <TableView fx:id="table">
+         <BorderPane.margin>
+            <Insets left="15" bottom="15"/>
+         </BorderPane.margin>
+         <columns>
+            <TableColumn fx:id="nameCol" text="Plant" prefWidth="170"/>
+            <TableColumn fx:id="wateringCol" text="Watering" prefWidth="120"/>
+            <TableColumn fx:id="fertilizerCol" text="Fertilizer" prefWidth="100"/>
+            <TableColumn fx:id="lightCol" text="Light" prefWidth="100"/>
+         </columns>
+      </TableView>
+   </center>
+
+   <!-- Right: the form -->
+   <right>
+      <VBox spacing="8" prefWidth="260" style="-fx-background-color: white;">
+         <BorderPane.margin>
+            <Insets right="15" bottom="15" left="10"/>
+         </BorderPane.margin>
+         <padding>
+            <Insets top="15" right="15" bottom="15" left="15"/>
+         </padding>
+
+         <Label text="Plan details" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+         <Label text="Plant name"/>
+         <TextField fx:id="plantNameField" promptText="e.g. Aloe Vera"/>
+
+         <Label text="Water every (days)"/>
+         <TextField fx:id="wateringDaysField" promptText="e.g. 3"/>
+
+         <CheckBox fx:id="fertilizerCheck" text="Needs fertilizer"/>
+
+         <Label text="Light level"/>
+         <ComboBox fx:id="lightBox" prefWidth="230" promptText="Choose..."/>
+
+         <HBox spacing="6">
+            <Button text="Add" onAction="#onAdd"
+                    style="-fx-background-color: #43a047; -fx-text-fill: white;"/>
+            <Button fx:id="updateButton" text="Update" onAction="#onUpdate"/>
+            <Button fx:id="deleteButton" text="Delete" onAction="#onDelete"
+                    style="-fx-background-color: #e57373; -fx-text-fill: white;"/>
+            <Button text="Clear" onAction="#onClear"/>
+         </HBox>
+      </VBox>
+   </right>
+</BorderPane>

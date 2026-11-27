@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.plantcare.plantcare.controller.WateringController"
+            prefWidth="920" prefHeight="540" style="-fx-background-color: #f1f8f1;">
+
+   <!-- Top: title and status filter -->
+   <top>
+      <VBox spacing="10">
+         <padding>
+            <Insets top="15" right="15" bottom="10" left="15"/>
+         </padding>
+         <Label text="Watering Schedule"
+                style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+         <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Show:"/>
+            <ComboBox fx:id="statusFilter" prefWidth="130"/>
+         </HBox>
+      </VBox>
+   </top>
+
+   <!-- Center: the table (sorted by the nearest next watering date) -->
+   <center>
+      <VBox spacing="10">
+         <BorderPane.margin>
+            <Insets left="15" bottom="15"/>
+         </BorderPane.margin>
+         <TableView fx:id="table" VBox.vgrow="ALWAYS">
+            <columns>
+               <TableColumn fx:id="nameCol" text="Plant" prefWidth="150"/>
+               <TableColumn fx:id="lastCol" text="Last watered" prefWidth="110"/>
+               <TableColumn fx:id="intervalCol" text="Interval" prefWidth="100"/>
+               <TableColumn fx:id="nextCol" text="Next watering" prefWidth="110"/>
+               <TableColumn fx:id="statusCol" text="Status" prefWidth="90"/>
+            </columns>
+         </TableView>
+         <Button fx:id="wateredButton" text="Mark as Watered" onAction="#onMarkWatered"
+                 style="-fx-background-color: #43a047; -fx-text-fill: white;"/>
+      </VBox>
+   </center>
+
+   <!-- Right: form to add a plant to the schedule -->
+   <right>
+      <VBox spacing="8" prefWidth="260" style="-fx-background-color: white;">
+         <BorderPane.margin>
+            <Insets right="15" bottom="15" left="10"/>
+         </BorderPane.margin>
+         <padding>
+            <Insets top="15" right="15" bottom="15" left="15"/>
+         </padding>
+
+         <Label text="Add a plant" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+         <Label text="Plant (from the Care Plans)"/>
+         <ComboBox fx:id="plantBox" prefWidth="230" promptText="Choose a plant..."/>
+
+         <Label text="Last watered"/>
+         <DatePicker fx:id="lastWateredPicker" prefWidth="230"/>
+
+         <Button text="Add" onAction="#onAdd"
+                 style="-fx-background-color: #43a047; -fx-text-fill: white;"/>
+      </VBox>
+   </right>
+</BorderPane>
